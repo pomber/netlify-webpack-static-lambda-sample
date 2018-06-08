@@ -6,7 +6,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 module.exports = {
   entry: { main: "./src/index.js" },
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist-static"),
     filename: "[name].[chunkhash].js",
     publicPath: "/"
   },
@@ -26,7 +26,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin("dist", {}),
+    new CleanWebpackPlugin("dist-static", {}),
     new HtmlWebpackPlugin({
       inject: false,
       hash: true,
@@ -40,7 +40,12 @@ module.exports = {
     historyApiFallback: true,
     overlay: true,
     proxy: {
-      "/api": "http://localhost:9999"
+      "/.netlify/functions": {
+        target: "http://localhost:9000",
+        pathRewrite: {
+          "^/\\.netlify/functions": ""
+        }
+      }
     }
   },
   node: {
